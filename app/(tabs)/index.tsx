@@ -1,10 +1,25 @@
-import { StyleSheet, View, Text, ImageBackground } from 'react-native';
+import { StyleSheet, View, Text, ImageBackground, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '@/constants/Colors';
 import { ButtonComponent } from '@/shared/ButtonComponent/ButtonComponent';
 
 export default function HomeScreen() {
+  const animatedValueText = new Animated.ValueXY({ x: 0, y: -100 });
+  const animatedOpacity = new Animated.Value(0);
+  Animated.parallel([
+    Animated.timing(animatedValueText, {
+      toValue: { x: 0, y: 0 },
+      duration: 1800,
+      useNativeDriver: false
+    }),
+    Animated.timing(animatedOpacity, {
+      toValue: 1,
+      duration: 1800,
+      useNativeDriver: false
+    }),
+  ]).start()
+
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground source={require('../../assets/images/bg.png')} resizeMode="contain" style={styles.background} />
@@ -15,7 +30,14 @@ export default function HomeScreen() {
         style={styles.gradient}
       >
         <View style={styles.wrapper} >
-          <Text style={styles.title}>Одно из самых вкусных кофе в городе!</Text>
+          <Animated.Text style={{
+            ...styles.title,
+            transform: [
+              { translateX: animatedValueText.x },
+              { translateY: animatedValueText.y }],
+            opacity: animatedOpacity
+          }}>Одно из самых вкусных кофе в городе!</Animated.Text>
+
           <Text style={styles.subtitle}>Свежие зёрна, настоящая арабика и бережная обжарка</Text>
           <ButtonComponent text='Начать' />
         </View>
@@ -33,6 +55,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  box: {
+
   },
   background: {
     flex: 2,

@@ -7,5 +7,5 @@ export const Colors = {
   lightText:'#9B9B9B',
   accentGreen:'#2F4B4E',
   accentBrown:'#C67C4E',
-  secondaryDarkBrown:'#A76237',
+  accentBrownHover:'#A76237',
 };
