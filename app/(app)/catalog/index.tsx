@@ -2,7 +2,7 @@ import { Colors, Fonts } from '@/constants/Colors';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { Link } from 'expo-router';
-import { View, Pressable, Text, StyleSheet, TextInput, Image, FlatList } from 'react-native';
+import { View, Pressable, Text, StyleSheet, TextInput, FlatList } from 'react-native';
 import SearchIcon from '@/assets/icons/SearchIcon';
 import EditIcon from '@/assets/icons/EditIcon';
 
@@ -32,7 +32,7 @@ export default function Catalog() {
         </View>
       </View>
       <View style={styles.body}>
-        <View style={styles.itemList}>
+        <View>
           <FlatList
             horizontal={true}
             data={[
