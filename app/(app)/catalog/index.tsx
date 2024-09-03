@@ -1,10 +1,10 @@
-import { Colors, Fonts } from '@/constants/Colors';
-import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { Link } from 'expo-router';
+import { Colors, Fonts } from '@/constants/Colors';
 import { View, Pressable, Text, StyleSheet, TextInput, FlatList } from 'react-native';
 import SearchIcon from '@/assets/icons/SearchIcon';
 import EditIcon from '@/assets/icons/EditIcon';
+import Card from '@/entities/card/ui/CardItem';
+import CardList from '@/entities/card/ui/CardList';
 
 export default function Catalog() {
   const [text, onChangeText] = useState('');
@@ -12,12 +12,11 @@ export default function Catalog() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.textHeader}>Адрес</Text>
-        <View style={styles.textContainer}>
+        <Pressable style={styles.addressContainer}>
           <Text style={styles.textAddress}>Москва, Новослободская 23</Text>
-          <Pressable>
-            <EditIcon />
-          </Pressable>
-        </View>
+          <EditIcon />
+        </Pressable>
+
         <View style={styles.inputWrapper}>
           <TextInput
             style={styles.input}
@@ -51,35 +50,18 @@ export default function Catalog() {
             )}
           />
         </View>
+        <CardList />
       </View>
-      <Link href="/catalog/id">
-        <Text
-          style={{
-            ...styles.text,
-            color: Colors.accentBrownHover,
-          }}
-        >
-          Выбранный кофеёк
-        </Text>
-      </Link>
-      <Link href="/catalog/cart">
-        <Text
-          style={{
-            ...styles.text,
-            color: Colors.accentBrownHover,
-          }}
-        >
-          В корзину
-        </Text>
-      </Link>
-
-      <Pressable onPress={() => router.back()}>
-        <Text style={styles.text}>Назад</Text>
-      </Pressable>
     </View>
   );
 }
 const styles = StyleSheet.create({
+  // cardsWrapper: {
+  //   flex: 1,
+  //   flexDirection: 'row',
+  //   flexWrap: 'wrap',
+  //   gap: 10,
+  // },
   container: {
     flex: 1,
   },
@@ -102,21 +84,12 @@ const styles = StyleSheet.create({
     color: Colors.textGray,
     fontFamily: 'Sora-SemiBold',
   },
-  textContainer: {
+  addressContainer: {
     flexDirection: 'row',
     marginBottom: 28,
     gap: 4,
     alignItems: 'center',
   },
-  text: {
-    fontSize: 24,
-    fontWeight: '400',
-    fontStyle: 'normal',
-    alignSelf: 'center',
-    color: Colors.black,
-    fontFamily: Fonts.regular,
-  },
-
   input: {
     width: '100%',
     height: 52,
@@ -125,8 +98,6 @@ const styles = StyleSheet.create({
     padding: 16,
     paddingLeft: 48,
     fontSize: 14,
-    fontWeight: '400',
-    fontStyle: 'normal',
     fontFamily: Fonts.regular,
     color: Colors.white,
   },
@@ -141,7 +112,12 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   body: {
-    padding: 30,
+    paddingLeft: 25,
+    // paddingRight: 15,
+    paddingTop: 28,
+    backgroundColor: Colors.lightBG,
+    width: '100%',
+    gap: 24,
   },
   item: {
     paddingHorizontal: 16,

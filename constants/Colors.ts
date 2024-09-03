@@ -10,6 +10,7 @@ export const Colors = {
   accentBrown: '#C67C4E',
   accentBrownHover: '#A76237',
   textGray: '#B7B7B7',
+  lightBG: '#F9F9F9',
 };
 export const Fonts = {
   regular: 'Sora-Regular',
