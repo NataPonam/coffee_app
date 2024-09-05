@@ -2,7 +2,7 @@
 import React from 'react';
 import { Colors } from '@/constants/Colors';
 import { Pressable, Text, StyleSheet, Animated, PressableProps } from 'react-native';
-// import { router } from 'expo-router';
+
 export function ButtonComponent({
   text,
   onPress,
