@@ -2,21 +2,21 @@
 import { Colors, Fonts } from '@/constants/Colors';
 import React from 'react';
 import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
-import { Card } from '../model/Card.model';
+import StarIcon from '@/assets/icons/StarIcon';
+import { BlurView } from 'expo-blur';
+import { Card } from '../model/card.model';
 
-export default function CardItem({
-  id,
-  name,
-  subTitle,
-  type,
-  price,
-  image,
-  description,
-  rating,
-}: Card) {
+export default function CardItem({ name, subTitle, price, image, rating }: Card) {
   return (
     <View style={styles.container}>
-      <Image style={styles.image} source={{ uri: image }} />
+      <View>
+        <Image style={styles.image} source={{ uri: image }} />
+        <BlurView intensity={5} style={styles.ratingContainer}>
+          <StarIcon />
+          <Text style={styles.ratingText}>{rating}</Text>
+        </BlurView>
+      </View>
+
       <View style={styles.wrapper}>
         <Text style={styles.title}>{name}</Text>
         <Text style={styles.description}>{subTitle}</Text>
@@ -29,12 +29,6 @@ export default function CardItem({
           </Pressable>
         </View>
       </View>
-      {/* <Text>
-        {id}
-        {type}
-        {description}
-        {rating}
-      </Text> */}
     </View>
   );
 }
@@ -46,13 +40,32 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     padding: 4,
     maxWidth: 150,
-    marginBottom: 10,
-    marginRight: 10,
+    marginBottom: 13,
+    marginHorizontal: 8,
+  },
+  ratingContainer: {
+    position: 'absolute',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
+    gap: 3,
+    backgroundColor: Colors.raitingBG,
+    width: 51,
+    height: 25,
+    borderTopLeftRadius: 16,
+    borderBottomRightRadius: 16,
+  },
+  ratingText: {
+    fontSize: 10,
+    fontFamily: Fonts.semibold,
+    color: Colors.white,
   },
   image: {
     width: 141,
     height: 132,
     borderRadius: 16,
+    resizeMode: 'contain',
   },
   wrapper: {
     width: '100%',

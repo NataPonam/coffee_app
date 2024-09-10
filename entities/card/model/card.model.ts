@@ -5,6 +5,6 @@ export interface Card {
   type: string;
   price: number;
   image: string;
-  description: string;
   rating: number;
+  description: string;
 }

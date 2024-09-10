@@ -1,14 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect } from 'react';
-import { DATA } from '@/assets/utils/data';
 import { View, StyleSheet, FlatList } from 'react-native';
 import { cardAtom, loadCardList } from '../model/card.state';
 import { useAtomValue, useSetAtom } from 'jotai';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { atomWithStorage, createJSONStorage } from 'jotai/utils';
 
-import { Card } from '../model/Card.model';
 import CardItem from './CardItem';
+import { Card } from '../model/card.model';
 
 export interface CardList {
   list: Card[] | null;
@@ -48,13 +47,13 @@ export default function CardList({
     ) {
       return el;
     }
-    if (activeKey === DATA[0].key && inputText !== '') {
+    if (activeKey === 'Все' && inputText !== '') {
       return (
         el.description.toLowerCase().includes(inputText) ||
         el.subTitle.toLowerCase().includes(inputText)
       );
     }
-    if (activeKey !== DATA[0].key && inputText !== '') {
+    if (activeKey !== 'Все' && inputText !== '') {
       return (
         (el.name.includes(activeKey) && el.description.toLowerCase().includes(inputText)) ||
         (el.name.includes(activeKey) && el.subTitle.toLowerCase().includes(inputText)) ||
@@ -62,27 +61,23 @@ export default function CardList({
       );
     }
 
-    if (activeKey !== DATA[0].key && inputText === '') {
+    if (activeKey !== 'Все' && inputText === '') {
       return el.name.includes(activeKey);
     }
     //Спросить у Сергея, как можно упростить  фильтр, сейчас выглядит так себе
   });
 
   const renderCard = ({ item }: { item: Card }) => {
-    return (
-      <View>
-        <CardItem {...item} />
-      </View>
-    );
+    return <CardItem {...item} />;
   };
 
   return (
-    <View>
+    <View style={styles.list}>
       <FlatList
-        style={styles.list}
         data={newCardList}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderCard}
+        horizontal={false}
         numColumns={2}
       />
     </View>
@@ -91,5 +86,6 @@ export default function CardList({
 const styles = StyleSheet.create({
   list: {
     width: '100%',
+    alignItems: 'center',
   },
 });

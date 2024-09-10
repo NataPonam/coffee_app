@@ -46,7 +46,7 @@ export default function HomeScreen() {
           </Animated.Text>
 
           <Text style={styles.subtitle}>Свежие зёрна, настоящая арабика и бережная обжарка</Text>
-          <ButtonComponent text="Начать" onPress={() => router.push('./catalog')} />
+          <ButtonComponent text="Начать" onPress={() => router.push('./(tabs)/catalog')} />
         </View>
       </LinearGradient>
     </SafeAreaView>

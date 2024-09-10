@@ -1,6 +1,6 @@
 import { atom } from 'jotai';
-import { Card } from './Card.model';
 import axios, { AxiosError } from 'axios';
+import { Card } from './card.model';
 
 export interface CardListState {
   cardList: Card[];

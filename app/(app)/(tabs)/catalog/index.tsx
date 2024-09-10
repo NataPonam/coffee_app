@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { DATA } from '@/assets/utils/data';
 import { Colors } from '@/constants/Colors';
 import { View, StyleSheet } from 'react-native';
-
 import AddressLine from '@/shared/AddressLine/AddressLine';
 import ButtonBar from '@/shared/ButtonComponent/buttonBar/ButtonBar';
 import SearchInput from '@/shared/SearchInput/SearchInput';
@@ -31,12 +30,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.lightBG,
   },
+
   header: {
     backgroundColor: Colors.black,
     padding: 30,
   },
   body: {
-    paddingLeft: 25,
     paddingTop: 28,
     backgroundColor: Colors.lightBG,
     width: '100%',

@@ -28,7 +28,7 @@ export default function ButtonBar({
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <FlatList
         horizontal={true}
         data={DATA}
@@ -51,6 +51,9 @@ export default function ButtonBar({
   );
 }
 const styles = StyleSheet.create({
+  container: {
+    paddingLeft: 30,
+  },
   item: {
     paddingHorizontal: 16,
     paddingTop: 8,
