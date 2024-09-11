@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Colors, Fonts } from '@/constants/Colors';
 import { Pressable, Text, StyleSheet, FlatList, View } from 'react-native';
 import { DATA } from '@/assets/utils/data';
@@ -12,21 +12,21 @@ export default function ButtonBar({
   setActiveKey: (prev: string) => void;
   inputText: string;
 }) {
-  if (inputText !== '') {
-    const newItem = DATA.find((item) => {
-      return item.key.toLowerCase().includes(inputText);
-    });
-    if (newItem !== undefined) {
-      setActiveKey(newItem.key);
-    }
-  }
-
   const buttonPressed = ({ key }: { key: string }) => {
     if (DATA.filter((el) => key === el.key)) {
       setActiveKey(key);
     }
   };
-
+  useEffect(() => {
+    if (inputText !== '') {
+      const newItem = DATA.find((item) => {
+        return item.key.toLowerCase().includes(inputText);
+      });
+      if (newItem !== undefined) {
+        setActiveKey(newItem.key);
+      }
+    }
+  }, [inputText]);
   return (
     <View style={styles.container}>
       <FlatList
