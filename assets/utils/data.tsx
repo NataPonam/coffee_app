@@ -1,4 +1,4 @@
-type ItemData = {
+export type ItemData = {
   key: string;
 };
 

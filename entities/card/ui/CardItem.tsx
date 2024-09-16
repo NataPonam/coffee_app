@@ -18,8 +18,10 @@ export default function CardItem({ name, subTitle, price, image, rating }: Card)
       </View>
 
       <View style={styles.wrapper}>
-        <Text style={styles.title}>{name}</Text>
-        <Text style={styles.description}>{subTitle}</Text>
+        <View>
+          <Text style={styles.title}>{name}</Text>
+          <Text style={styles.description}>{subTitle}</Text>
+        </View>
         <View style={styles.priceWrapper}>
           <View>
             <Text style={styles.price}>{price} ₽</Text>
@@ -68,7 +70,9 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   wrapper: {
+    flex: 1,
     width: '100%',
+    justifyContent: 'space-between',
     paddingHorizontal: 8,
     paddingVertical: 12,
   },
@@ -85,6 +89,7 @@ const styles = StyleSheet.create({
     color: Colors.lightText,
   },
   priceWrapper: {
+    marginTop: 8,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
