@@ -36,6 +36,11 @@
               "./assets/fonts/Sora-SemiBold.ttf"
                     ]
           }
+      ], [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow dz app to use your location."
+        }
       ]
     ],
     "experiments": {

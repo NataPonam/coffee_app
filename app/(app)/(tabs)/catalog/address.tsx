@@ -2,33 +2,77 @@ import GeoTag from '@/assets/icons/inputAddressIcon/GeoTag';
 import Compass from '@/assets/icons/inputAddressIcon/Compass';
 import { Colors, Fonts } from '@/constants/Colors';
 import { router } from 'expo-router';
-import React from 'react';
-import { View, Pressable, StyleSheet, TextInput } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Pressable, StyleSheet, TextInput, Text } from 'react-native';
 import { ButtonComponent } from '@/shared/ButtonComponent/ButtonComponent';
 import InputMultiIcon from '@/assets/icons/inputAddressIcon/InputMultiIcon';
+import * as Location from 'expo-location';
+import { LocationObject } from 'expo-location';
 
 export default function Address() {
+  const [location, setLocation] = useState<LocationObject>();
+  const [errorMsg, setErrorMsg] = useState<null | string>(null);
+  const [currentAddress, setCurrentAddress] = useState<Location.LocationGeocodedAddress[][0]>();
+
+  const [latitude, setLatitude] = useState<number>(0);
+  const [longitude, setLongitude] = useState<number>(0);
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      const location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+
+      if (location) {
+        const { latitude, longitude } = location.coords;
+        setLatitude(latitude);
+        setLongitude(longitude);
+      }
+    })();
+  }, []);
+  // let text = 'Waiting..';
+  // if (errorMsg) {
+  //   text = errorMsg;
+  // } else if (location) {
+  //   text = JSON.stringify(location);
+  // }
+  const reverseGeoCode = async () => {
+    const addressReversed = await Location.reverseGeocodeAsync({ latitude, longitude });
+    setCurrentAddress(addressReversed[0]);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.inputWrapper}>
-        <TextInput
-          style={styles.input}
-          placeholder="Введите адрес"
-          placeholderTextColor={Colors.placeholder}
-        // onChangeText={onChangeText}
-        // value={text}
-        />
+        {currentAddress ? (
+          <Text style={styles.input}>
+            {currentAddress.city}, {currentAddress.street} {currentAddress.streetNumber}
+          </Text>
+        ) : (
+          <TextInput
+            style={styles.input}
+            placeholder="Введите адрес"
+            placeholderTextColor={Colors.placeholder}
+            // onChangeText={onChangeText}
+            // value={text}
+          />
+        )}
+
         <Pressable style={styles.icon}>
           <GeoTag />
         </Pressable>
-        <Pressable onPress={() => router.back()} style={styles.compassButton}>
+        <Pressable onPress={reverseGeoCode} style={styles.compassButton}>
           <Compass />
         </Pressable>
       </View>
       <View>
         <TextInput
           style={[styles.input, styles.inputMulty]}
-          // placeholder="Введите адрес"
+          placeholder="Введите текст"
           placeholderTextColor={Colors.placeholder}
           // onChangeText={onChangeText}
           // value={text}
@@ -38,6 +82,7 @@ export default function Address() {
           <InputMultiIcon />
         </Pressable>
       </View>
+
       <ButtonComponent
         text="Сохранить"
         onPress={() => console.log('changing address')}
