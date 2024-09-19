@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DATA, ItemData } from '@/assets/utils/data';
+import { UnionKeys } from '@/assets/utils/data';
 import { Colors } from '@/constants/Colors';
 import { View, StyleSheet } from 'react-native';
 import AddressLine from '@/shared/AddressLine/AddressLine';
@@ -9,7 +9,7 @@ import CardList from '@/entities/card/ui/CardList';
 
 export default function Catalog() {
   const [text, onChangeText] = useState<string>('');
-  const [activeKey, setActiveKey] = useState<ItemData['key']>(DATA[0].key);
+  const [activeKey, setActiveKey] = useState<UnionKeys>('Все');
   const [isFilter, setIsFilter] = useState<boolean>(true);
 
   return (
@@ -27,7 +27,12 @@ export default function Catalog() {
           setIsFilter={setIsFilter}
           isFilter={isFilter}
         />
-        <CardList inputText={text} activeKey={activeKey} />
+        <CardList
+          inputText={text}
+          onChangeText={onChangeText}
+          activeKey={activeKey}
+          isFilter={isFilter}
+        />
       </View>
     </View>
   );

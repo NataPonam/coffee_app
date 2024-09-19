@@ -1,6 +1,7 @@
 export type ItemData = {
-  key: string;
+  key: UnionKeys;
 };
+export type UnionKeys = 'Все' | 'Капучино' | 'Макиатто' | 'Латте' | 'Американо';
 
 export const DATA: ItemData[] = [
   { key: 'Все' },

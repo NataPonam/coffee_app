@@ -9,7 +9,6 @@ import { atomWithStorage, createJSONStorage } from 'jotai/utils';
 import CardItem from './CardItem';
 import { Card } from '../model/card.model';
 import Fuse from 'fuse.js';
-
 export interface CardList {
   list: Card[] | null;
   isLoading: boolean;
@@ -30,17 +29,21 @@ export const cardListAtom = atomWithStorage<CardList>(
 export default function CardList({
   inputText,
   activeKey,
+  isFilter,
+  onChangeText,
 }: {
   inputText: string;
   activeKey: string;
+  isFilter: boolean;
+  onChangeText: (prev: string) => void;
 }) {
   const { cardList } = useAtomValue(cardAtom);
   const loadList = useSetAtom(loadCardList);
-
   const [fechedData, setFetchedData] = useState(cardList);
 
   const fuse = new Fuse(cardList, {
     keys: ['subTitle', 'name'],
+    threshold: 0.8,
   });
 
   useEffect(() => {
@@ -51,7 +54,8 @@ export default function CardList({
     if (activeKey === 'Все') {
       setFetchedData(cardList);
     }
-    if (activeKey !== 'Все') {
+    if (activeKey !== 'Все' && isFilter) {
+      onChangeText('');
       const newCardList = cardList.filter((el) => {
         return el.name.includes(activeKey);
       });
