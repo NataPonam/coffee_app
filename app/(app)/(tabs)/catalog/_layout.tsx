@@ -34,6 +34,21 @@ export default function CatalogLayout() {
             headerShadowVisible: false,
           }}
         />
+        <Stack.Screen
+          name="[alias]"
+          options={{
+            statusBarColor: Colors.white,
+            statusBarStyle: 'dark',
+            headerShown: true,
+            title: 'Описание',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: Fonts.semibold,
+              fontSize: 18,
+            },
+            headerShadowVisible: false,
+          }}
+        />
       </Stack>
     </SafeAreaProvider>
   );

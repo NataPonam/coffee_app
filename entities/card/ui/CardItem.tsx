@@ -5,8 +5,9 @@ import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
 import StarIcon from '@/assets/icons/StarIcon';
 import { BlurView } from 'expo-blur';
 import { Card } from '../model/card.model';
+import { router } from 'expo-router';
 
-export default function CardItem({ name, subTitle, price, image, rating }: Card) {
+export default function CardItem({ name, subTitle, price, image, rating, id }: Card) {
   return (
     <View style={styles.container}>
       <View>
@@ -24,7 +25,7 @@ export default function CardItem({ name, subTitle, price, image, rating }: Card)
           <View>
             <Text style={styles.price}>{price} ₽</Text>
           </View>
-          <Pressable style={styles.button}>
+          <Pressable style={styles.button} onPress={() => router.navigate(`/(app)/catalog/${id}`)}>
             <Text style={styles.textButton}>+</Text>
           </Pressable>
         </View>
