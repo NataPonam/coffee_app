@@ -1,24 +1,30 @@
 import React, { useEffect } from 'react';
 import { Colors, Fonts } from '@/constants/Colors';
 import { Pressable, Text, StyleSheet, FlatList, View } from 'react-native';
-import { DATA } from '@/assets/utils/data';
+import { DATA, UnionKeys } from './ButtonBar.type';
 
 export default function ButtonBar({
   activeKey,
   setActiveKey,
   inputText,
+  isFilter,
+  setIsFilter,
 }: {
   activeKey: string;
-  setActiveKey: (prev: string) => void;
+  setActiveKey: (prev: UnionKeys) => void;
+  isFilter: boolean;
+  setIsFilter: (prev: boolean) => void;
   inputText: string;
 }) {
-  const buttonPressed = ({ key }: { key: string }) => {
+  const buttonPressed = ({ key }: { key: UnionKeys }) => {
     if (DATA.filter((el) => key === el.key)) {
       setActiveKey(key);
+      setIsFilter(true);
     }
   };
   useEffect(() => {
     if (inputText !== '') {
+      setIsFilter(false);
       const newItem = DATA.find((item) => {
         return item.key.toLowerCase().includes(inputText);
       });
@@ -38,8 +44,9 @@ export default function ButtonBar({
             <Text
               style={{
                 ...styles.item,
-                backgroundColor: activeKey === item.key ? Colors.accentBrown : Colors.white,
-                color: activeKey === item.key ? Colors.white : Colors.accentGreen,
+                backgroundColor:
+                  activeKey === item.key && isFilter ? Colors.accentBrown : Colors.white,
+                color: activeKey === item.key && isFilter ? Colors.white : Colors.accentGreen,
               }}
             >
               {item.key}

@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 import { cardAtom, loadCardList } from '../model/card.state';
 import { useAtomValue, useSetAtom } from 'jotai';
@@ -8,7 +8,7 @@ import { atomWithStorage, createJSONStorage } from 'jotai/utils';
 
 import CardItem from './CardItem';
 import { Card } from '../model/card.model';
-
+import Fuse from 'fuse.js';
 export interface CardList {
   list: Card[] | null;
   isLoading: boolean;
@@ -29,43 +29,49 @@ export const cardListAtom = atomWithStorage<CardList>(
 export default function CardList({
   inputText,
   activeKey,
+  isFilter,
+  onChangeText,
 }: {
   inputText: string;
   activeKey: string;
+  isFilter: boolean;
+  onChangeText: (prev: string) => void;
 }) {
   const { cardList } = useAtomValue(cardAtom);
-
   const loadList = useSetAtom(loadCardList);
+  const [fechedData, setFetchedData] = useState(cardList);
+
+  const fuse = new Fuse(cardList, {
+    keys: ['subTitle', 'name'],
+    threshold: 0.8,
+  });
+
   useEffect(() => {
     loadList();
   }, []);
 
-  const newCardList = cardList.filter((el) => {
-    if (
-      (activeKey === 'Все' && inputText === '') ||
-      (activeKey === 'Все' && activeKey.toLowerCase().includes(inputText))
-    ) {
-      return el;
+  useEffect(() => {
+    if (activeKey === 'Все') {
+      setFetchedData(cardList);
     }
-    if (activeKey === 'Все' && inputText !== '') {
-      return (
-        el.description.toLowerCase().includes(inputText) ||
-        el.subTitle.toLowerCase().includes(inputText)
-      );
+    if (activeKey !== 'Все' && isFilter) {
+      onChangeText('');
+      const newCardList = cardList.filter((el) => {
+        return el.name.includes(activeKey);
+      });
+      setFetchedData(newCardList);
     }
-    if (activeKey !== 'Все' && inputText !== '') {
-      return (
-        (el.name.includes(activeKey) && el.description.toLowerCase().includes(inputText)) ||
-        (el.name.includes(activeKey) && el.subTitle.toLowerCase().includes(inputText)) ||
-        (el.name.includes(activeKey) && el.subTitle.toLowerCase().includes(inputText))
-      );
+    if (inputText !== '') {
+      const searchedCardList = fuse.search(inputText);
+      if (searchedCardList.length) {
+        const newCardList: Card[] = [];
+        searchedCardList.map((el) => {
+          return newCardList.push(el.item);
+        });
+        setFetchedData(newCardList);
+      }
     }
-
-    if (activeKey !== 'Все' && inputText === '') {
-      return el.name.includes(activeKey);
-    }
-    //Спросить у Сергея, как можно упростить  фильтр, сейчас выглядит так себе
-  });
+  }, [inputText, activeKey, cardList]);
 
   const renderCard = ({ item }: { item: Card }) => {
     return <CardItem {...item} />;
@@ -74,7 +80,7 @@ export default function CardList({
   return (
     <View style={styles.list}>
       <FlatList
-        data={newCardList}
+        data={fechedData}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderCard}
         horizontal={false}
@@ -87,5 +93,6 @@ const styles = StyleSheet.create({
   list: {
     width: '100%',
     alignItems: 'center',
+    paddingBottom: 370,
   },
 });
