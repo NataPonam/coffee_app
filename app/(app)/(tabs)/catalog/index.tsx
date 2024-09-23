@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { UnionKeys } from '@/assets/utils/data';
 import { Colors } from '@/constants/Colors';
 import { View, StyleSheet } from 'react-native';
 import AddressLine from '@/shared/AddressLine/AddressLine';
 import ButtonBar from '@/shared/ButtonComponent/buttonBar/ButtonBar';
 import SearchInput from '@/shared/SearchInput/SearchInput';
 import CardList from '@/entities/card/ui/CardList';
+import { UnionKeys } from '@/shared/ButtonComponent/buttonBar/ButtonBar.type';
 
 export default function Catalog() {
   const [text, onChangeText] = useState<string>('');

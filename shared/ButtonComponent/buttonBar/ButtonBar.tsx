@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Colors, Fonts } from '@/constants/Colors';
 import { Pressable, Text, StyleSheet, FlatList, View } from 'react-native';
-import { DATA, UnionKeys } from '@/assets/utils/data';
+import { DATA, UnionKeys } from './ButtonBar.type';
 
 export default function ButtonBar({
   activeKey,
