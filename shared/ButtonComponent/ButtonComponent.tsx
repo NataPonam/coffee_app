@@ -1,8 +1,14 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { Colors } from '@/constants/Colors';
-import { Pressable, Text, StyleSheet, Animated } from 'react-native';
-// import { router } from 'expo-router';
-export function ButtonComponent({ text, onPress }: { text: string } & { onPress: () => void }) {
+import { Pressable, Text, StyleSheet, Animated, PressableProps } from 'react-native';
+
+export function ButtonComponent({
+  text,
+  onPress,
+  style,
+  ...props
+}: PressableProps & { text: string; onPress: () => void }) {
   const animatedValue = new Animated.Value(100);
   const bgColor = animatedValue.interpolate({
     inputRange: [0, 100],
@@ -23,7 +29,13 @@ export function ButtonComponent({ text, onPress }: { text: string } & { onPress:
     }).start();
   };
   return (
-    <Pressable onPressIn={onPressButtonIn} onPressOut={onPressButtonOut} onPress={onPress}>
+    <Pressable
+      onPressIn={onPressButtonIn}
+      onPressOut={onPressButtonOut}
+      onPress={onPress}
+      style={style}
+      {...props}
+    >
       <Animated.View style={{ ...styles.container, backgroundColor: bgColor }}>
         <Text style={styles.text}>{text}</Text>
       </Animated.View>

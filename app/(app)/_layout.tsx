@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { Colors } from '@/constants/Colors';
 import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import { StatusBar } from 'expo-status-bar';
+
 SplashScreen.preventAutoHideAsync();
 
 export default function Layout() {
@@ -21,16 +22,29 @@ export default function Layout() {
   if (!loaded && !error) {
     return null;
   }
+
   return (
     <SafeAreaProvider>
-      <StatusBar style="light" />
+      <StatusBar style="light" backgroundColor="black" />
       <Stack
         screenOptions={{
-          statusBarColor: Colors.black,
           headerShown: false,
         }}
       >
-        <Stack.Screen name="index" />
+        <Stack.Screen
+          name="index"
+          options={{
+            statusBarColor: Colors.black,
+            navigationBarColor: Colors.black,
+          }}
+        />
+        <Stack.Screen
+          name="(tabs)"
+          options={{
+            headerShown: false,
+            navigationBarColor: Colors.white,
+          }}
+        />
       </Stack>
     </SafeAreaProvider>
   );
