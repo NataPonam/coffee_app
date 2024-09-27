@@ -6,8 +6,10 @@ const storageAddress = createJSONStorage<string>(() => AsyncStorage);
 
 const INITIAL_STATE: string = '';
 
-export const addressStorageAtom = atomWithStorage<string>(
-  'addressSt',
+export const addressStorageAtom = atomWithStorage<string>('address', INITIAL_STATE, storageAddress);
+
+export const addressInfoStorageAtom = atomWithStorage<string>(
+  'addressInfo',
   INITIAL_STATE,
   storageAddress,
 );
@@ -15,7 +17,15 @@ export const addressStorageAtom = atomWithStorage<string>(
 export const getAddress = atom(
   async (get) => get(addressStorageAtom),
 
-  async (get, set, str: string) => {
-    set(addressStorageAtom, str);
+  async (get, set, string: string) => {
+    set(addressStorageAtom, string);
+  },
+);
+
+export const getAddressInfo = atom(
+  async (get) => get(addressInfoStorageAtom),
+
+  async (get, set, string: string) => {
+    set(addressInfoStorageAtom, string);
   },
 );

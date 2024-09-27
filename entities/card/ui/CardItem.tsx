@@ -17,7 +17,6 @@ export default function CardItem({ name, subTitle, price, image, rating, id }: C
           <Text style={styles.ratingText}>{rating}</Text>
         </BlurView>
       </View>
-
       <View style={styles.wrapper}>
         <View>
           <Text style={styles.title}>{name}</Text>
@@ -27,7 +26,7 @@ export default function CardItem({ name, subTitle, price, image, rating, id }: C
           <View>
             <Text style={styles.price}>{price} ₽</Text>
           </View>
-          <Pressable style={styles.button} onPress={() => router.navigate(`/(app)/catalog/${id}`)}>
+          <Pressable style={styles.button} onPress={() => router.navigate(`/(app)/${id}`)}>
             <Text style={styles.textButton}>+</Text>
           </Pressable>
         </View>

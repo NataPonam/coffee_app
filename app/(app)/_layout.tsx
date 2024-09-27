@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Colors } from '@/constants/Colors';
+import { Colors, Fonts } from '@/constants/Colors';
 import { Stack } from 'expo-router';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
@@ -43,6 +43,35 @@ export default function Layout() {
           options={{
             headerShown: false,
             navigationBarColor: Colors.white,
+          }}
+        />
+        <Stack.Screen
+          name="[alias]"
+          options={{
+            statusBarColor: Colors.white,
+            statusBarStyle: 'dark',
+            headerShown: true,
+            title: 'Описание',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontSize: 18,
+            },
+            headerShadowVisible: false,
+          }}
+        />
+        <Stack.Screen
+          name="address"
+          options={{
+            statusBarColor: Colors.white,
+            statusBarStyle: 'dark',
+            headerShown: true,
+            title: 'Изменить адрес',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: Fonts.semibold,
+              fontSize: 18,
+            },
+            headerShadowVisible: false,
           }}
         />
       </Stack>
