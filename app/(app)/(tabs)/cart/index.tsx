@@ -1,35 +1,77 @@
-import EditIcon from '@/assets/icons/EditIcon';
-import { Colors, Fonts } from '@/constants/Colors';
-import { getAddress, getAddressInfo } from '@/entities/address/address.state';
-import { initSize, UnionSizes } from '@/entities/card/ui/widgets/SizeTabBar';
-import { router } from 'expo-router';
-import { useAtom, useAtomValue } from 'jotai';
 import React, { useState } from 'react';
 import { View, Pressable, Text, Image, StyleSheet } from 'react-native';
+import { useAtom, useAtomValue } from 'jotai';
+import { router } from 'expo-router';
+import { Colors, Fonts } from '@/constants/Colors';
+import { initSize, UnionSizes } from '@/entities/card/ui/widgets/SizeTabBar';
 import { selectedCoffeAtom, selectedCoffePriceAtom } from '../../[alias]';
 import { ButtonComponent } from '@/shared/ButtonComponent/ButtonComponent';
+import OrderDeliveryAddress from '@/entities/order/OrderDeliveryAddress';
+import axios, { AxiosError } from 'axios';
+import { getAddress } from '@/entities/address/address.state';
+
+export interface OrderResponse {
+  address: string;
+  orderItems: [
+    {
+      id: number | undefined;
+      size: UnionSizes;
+      quantity: number;
+    },
+  ];
+}
 
 export default function Cart() {
-  const [selectedSize] = useAtom<UnionSizes>(initSize);
   const [addressLocation] = useAtom(getAddress);
-  const [addressInfo] = useAtom(getAddressInfo);
+  const [selectedSize] = useAtom<UnionSizes>(initSize);
   const [price] = useAtom(selectedCoffePriceAtom);
-  const selectedCoffee = useAtomValue(selectedCoffeAtom);
-  const [count, setCount] = useState(1);
+  // const selectedCoffee = useAtomValue(selectedCoffeAtom);
+  const [selectedCoffee, setCoffeItem] = useAtom(selectedCoffeAtom);
+  const [count, setCount] = useState<number>(1);
+
+  const delivetyPrice = new Intl.NumberFormat('ru-RU', {
+    style: 'currency',
+    currency: 'RUB',
+    maximumFractionDigits: 0,
+  }).format(100);
+  const priceItem =
+    price &&
+    new Intl.NumberFormat('ru-RU', {
+      style: 'currency',
+      currency: 'RUB',
+      maximumFractionDigits: 0,
+    }).format(price);
+  const summ = price ? price * count + 100 : 0;
+  const totalPrice = new Intl.NumberFormat('ru-RU', {
+    style: 'currency',
+    currency: 'RUB',
+    maximumFractionDigits: 0,
+  }).format(summ);
+
+  const newOrder: OrderResponse = {
+    address: addressLocation,
+    orderItems: [{ id: selectedCoffee?.id, size: selectedSize, quantity: count }],
+  };
+  const makeOrder = async () => {
+    try {
+      const response = await axios.post(`https://purpleschool.ru/coffee-api/order`, newOrder);
+      if (response.data.success) {
+        router.push('/(app)/(tabs)/cart/success');
+        setCoffeItem(undefined);
+      }
+      return response.data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.log(5, error.message);
+        router.navigate('/(app)/(tabs)/cart/error');
+      }
+    }
+  };
 
   return (
     <View style={styles.container}>
-      <View style={styles.delivery}>
-        <Text style={styles.title}>Адрес доставки</Text>
-        <View>
-          <Text style={styles.address}>{addressLocation}</Text>
-          <Text style={styles.info}>{addressInfo}</Text>
-        </View>
-        <Pressable onPress={() => router.push('/(app)/address')} style={styles.deliveryButton}>
-          <EditIcon color={Colors.darkText} />
-          <Text>Редактировать адрес</Text>
-        </Pressable>
-      </View>
+      <OrderDeliveryAddress />
+
       <View style={styles.orderList}>
         <View style={styles.line}></View>
         {selectedCoffee ? (
@@ -68,22 +110,19 @@ export default function Cart() {
               <Text style={styles.orderTitle}>Итог</Text>
               <View style={styles.priceWrapper}>
                 <Text style={styles.priceText}>Цена</Text>
-                <Text style={styles.priceNum}>{price} ₽</Text>
+                <Text style={styles.priceNum}>{priceItem}</Text>
               </View>
               <View style={styles.priceWrapper}>
                 <Text style={styles.priceText}>Доставка</Text>
-                <Text style={styles.priceNum}>100 ₽</Text>
+                <Text style={styles.priceNum}>{delivetyPrice}</Text>
               </View>
               <View style={styles.line}></View>
               <View style={styles.priceWrapper}>
                 <Text style={styles.priceText}>Итого к оплате</Text>
-                <Text style={styles.priceNum}>{price ? price * count + 100 : 100} ₽</Text>
+                <Text style={styles.priceNum}>{totalPrice}</Text>
               </View>
             </View>
-            <ButtonComponent
-              text="Заказать"
-              onPress={() => router.push('/(app)/(tabs)/cart/success')}
-            />
+            <ButtonComponent text="Заказать" onPress={makeOrder} />
           </>
         ) : (
           <ButtonComponent
@@ -102,48 +141,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     paddingHorizontal: 30,
   },
-  delivery: {
-    gap: 16,
-    marginBottom: 30,
-  },
-  title: {
-    fontFamily: Fonts.semibold,
-    fontSize: 16,
-    lineHeight: 16,
-    color: Colors.darkText,
-  },
-  address: {
-    fontFamily: Fonts.semibold,
-    fontWeight: '600',
-    fontSize: 14,
-    lineHeight: 16,
-    color: Colors.darkText,
-    marginBottom: 8,
-  },
-  info: {
-    fontFamily: Fonts.regular,
-    fontWeight: '400',
-    fontSize: 12,
-    lineHeight: 17,
-    color: Colors.lightText,
-  },
-  deliveryButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    width: 190,
-    borderRadius: 16,
-    backgroundColor: Colors.white,
-    borderStyle: 'solid',
-    borderWidth: 1,
-    borderColor: Colors.borderColor,
-    fontFamily: Fonts.regular,
-    fontSize: 12,
-    lineHeight: 12,
-    color: Colors.darkText,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
+
   line: {
     borderBottomWidth: 1,
     borderBottomColor: Colors.borderColor,

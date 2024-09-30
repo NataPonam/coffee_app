@@ -73,7 +73,7 @@ export default function Address() {
   const saveAddress = () => {
     setSavedAddressAtom(addressInput);
     setSavedInfoAtom(multilineText);
-    router.back();
+    router.dismiss();
   };
 
   return (
