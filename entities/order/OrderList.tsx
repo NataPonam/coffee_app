@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 16,
     color: Colors.darkText,
-    marginBottom: 4,
+    marginBottom: 2,
   },
   orderDescr: {
     fontFamily: Fonts.regular,
