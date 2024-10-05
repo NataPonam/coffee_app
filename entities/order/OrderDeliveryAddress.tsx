@@ -26,7 +26,7 @@ export default function OrderDeliveryAddress() {
 const styles = StyleSheet.create({
   container: {
     gap: 16,
-    marginBottom: 30,
+    marginBottom: 15,
   },
   title: {
     fontFamily: Fonts.semibold,

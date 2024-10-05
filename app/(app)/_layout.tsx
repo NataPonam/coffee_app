@@ -8,7 +8,7 @@ import { StatusBar } from 'expo-status-bar';
 
 SplashScreen.preventAutoHideAsync();
 
-export default function Layout() {
+export default function RootLayout() {
   const [loaded, error] = useFonts({
     'Sora-Regular': require('../../assets/fonts/Sora-Regular.ttf'),
     'Sora-SemiBold': require('../../assets/fonts/Sora-SemiBold.ttf'),
@@ -41,7 +41,6 @@ export default function Layout() {
         <Stack.Screen
           name="(tabs)"
           options={{
-            headerShown: false,
             navigationBarColor: Colors.white,
           }}
         />

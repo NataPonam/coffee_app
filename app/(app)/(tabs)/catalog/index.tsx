@@ -42,7 +42,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.lightBG,
   },
-
   header: {
     backgroundColor: Colors.black,
     padding: 30,

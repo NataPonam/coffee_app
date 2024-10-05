@@ -8,11 +8,7 @@ export default function CartLayout() {
   return (
     <SafeAreaProvider>
       <StatusBar style="dark" backgroundColor="white" />
-      <Stack
-        screenOptions={{
-          headerShown: true,
-        }}
-      >
+      <Stack>
         <Stack.Screen
           name="index"
           options={{
@@ -33,6 +29,7 @@ export default function CartLayout() {
           options={{
             statusBarColor: Colors.white,
             statusBarStyle: 'dark',
+            headerShown: false,
           }}
         />
       </Stack>

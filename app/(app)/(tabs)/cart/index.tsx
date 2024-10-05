@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
-import { View, Pressable, Text, Image, StyleSheet } from 'react-native';
-import { useAtom, useAtomValue } from 'jotai';
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { useAtom } from 'jotai';
 import { router } from 'expo-router';
 import { Colors, Fonts } from '@/constants/Colors';
 import { initSize, UnionSizes } from '@/entities/card/ui/widgets/SizeTabBar';
-import { selectedCoffeAtom, selectedCoffePriceAtom } from '../../[alias]';
+import { selectedCoffeAtom, selectedCoffeListAtom } from '../../[alias]';
 import { ButtonComponent } from '@/shared/ButtonComponent/ButtonComponent';
 import OrderDeliveryAddress from '@/entities/order/OrderDeliveryAddress';
 import axios, { AxiosError } from 'axios';
 import { getAddress } from '@/entities/address/address.state';
+import OrderList from '@/entities/order/OrderList';
 
 export interface OrderResponse {
   address: string;
@@ -16,7 +17,7 @@ export interface OrderResponse {
     {
       id: number | undefined;
       size: UnionSizes;
-      quantity: number;
+      quantity: number | undefined;
     },
   ];
 }
@@ -24,45 +25,53 @@ export interface OrderResponse {
 export default function Cart() {
   const [addressLocation] = useAtom(getAddress);
   const [selectedSize] = useAtom<UnionSizes>(initSize);
-  const [price] = useAtom(selectedCoffePriceAtom);
-  // const selectedCoffee = useAtomValue(selectedCoffeAtom);
-  const [selectedCoffee, setCoffeItem] = useAtom(selectedCoffeAtom);
-  const [count, setCount] = useState<number>(1);
+  const [selectedCoffee] = useAtom(selectedCoffeAtom);
+  const [selectedCoffeeList, setSelectedCoffeeList] = useAtom(selectedCoffeListAtom);
+
+  const commonPrice = selectedCoffeeList
+    .map((el) => {
+      const priceWithSize = el.size === 'S' ? -30 : el.size === 'L' ? 30 : 0;
+      return (el.item.price + priceWithSize) * el.quantity;
+    })
+    .reduce((acc, current) => {
+      return acc + current;
+    }, 0);
+
+  const totalPrice = new Intl.NumberFormat('ru-RU', {
+    style: 'currency',
+    currency: 'RUB',
+    maximumFractionDigits: 0,
+  }).format(commonPrice);
 
   const delivetyPrice = new Intl.NumberFormat('ru-RU', {
     style: 'currency',
     currency: 'RUB',
     maximumFractionDigits: 0,
   }).format(100);
-  const priceItem =
-    price &&
-    new Intl.NumberFormat('ru-RU', {
-      style: 'currency',
-      currency: 'RUB',
-      maximumFractionDigits: 0,
-    }).format(price);
-  const summ = price ? price * count + 100 : 0;
-  const totalPrice = new Intl.NumberFormat('ru-RU', {
+
+  const priceWithDelivery = new Intl.NumberFormat('ru-RU', {
     style: 'currency',
     currency: 'RUB',
     maximumFractionDigits: 0,
-  }).format(summ);
+  }).format(commonPrice + 100);
 
   const newOrder: OrderResponse = {
     address: addressLocation,
-    orderItems: [{ id: selectedCoffee?.id, size: selectedSize, quantity: count }],
+    orderItems: [
+      { id: selectedCoffee?.item.id, size: selectedSize, quantity: selectedCoffee?.quantity },
+    ],
   };
   const makeOrder = async () => {
     try {
       const response = await axios.post(`https://purpleschool.ru/coffee-api/order`, newOrder);
       if (response.data.success) {
         router.push('/(app)/(tabs)/cart/success');
-        setCoffeItem(undefined);
+        setSelectedCoffeeList([]);
       }
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {
-        console.log(5, error.message);
+        console.log(error.message);
         router.navigate('/(app)/(tabs)/cart/error');
       }
     }
@@ -71,46 +80,17 @@ export default function Cart() {
   return (
     <View style={styles.container}>
       <OrderDeliveryAddress />
-
       <View style={styles.orderList}>
         <View style={styles.line}></View>
-        {selectedCoffee ? (
+        {selectedCoffeeList.length ? (
           <>
-            <View style={styles.orderWrapper}>
-              <Image style={styles.image} source={{ uri: selectedCoffee?.image }} />
-              <View>
-                <Text style={styles.orderTitle}>{selectedCoffee?.name}</Text>
-                <Text style={styles.orderDescr}>
-                  {selectedCoffee?.subTitle} / {selectedSize}
-                </Text>
-              </View>
-              <View style={styles.changeNumberButton}>
-                <Pressable
-                  disabled={count == 1 ? true : false}
-                  onPress={() => setCount(count - 1)}
-                  style={styles.numberButton}
-                >
-                  <Text
-                    style={{
-                      ...styles.textNumberButton,
-                      color: count == 1 ? Colors.lightText : Colors.darkText,
-                    }}
-                  >
-                    –
-                  </Text>
-                </Pressable>
-                <Text style={styles.coffeeCount}>{count}</Text>
-                <Pressable onPress={() => setCount(count + 1)} style={styles.numberButton}>
-                  <Text style={styles.textNumberButton}>+</Text>
-                </Pressable>
-              </View>
-            </View>
+            <OrderList />
             <View style={styles.line}></View>
             <View style={styles.finalPriceWrapper}>
               <Text style={styles.orderTitle}>Итог</Text>
               <View style={styles.priceWrapper}>
                 <Text style={styles.priceText}>Цена</Text>
-                <Text style={styles.priceNum}>{priceItem}</Text>
+                <Text style={styles.priceNum}>{totalPrice}</Text>
               </View>
               <View style={styles.priceWrapper}>
                 <Text style={styles.priceText}>Доставка</Text>
@@ -119,7 +99,7 @@ export default function Cart() {
               <View style={styles.line}></View>
               <View style={styles.priceWrapper}>
                 <Text style={styles.priceText}>Итого к оплате</Text>
-                <Text style={styles.priceNum}>{totalPrice}</Text>
+                <Text style={styles.priceNum}>{priceWithDelivery}</Text>
               </View>
             </View>
             <ButtonComponent text="Заказать" onPress={makeOrder} />
@@ -137,29 +117,17 @@ export default function Cart() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'flex-start',
+    // alignItems: 'flex-start',
     backgroundColor: Colors.white,
     paddingHorizontal: 30,
   },
-
   line: {
     borderBottomWidth: 1,
     borderBottomColor: Colors.borderColor,
   },
   orderList: {
-    gap: 20,
+    gap: 10,
     width: '100%',
-  },
-  orderWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    // justifyContent: 'space-between',
-  },
-  image: {
-    width: 54,
-    height: 54,
-    resizeMode: 'contain',
-    marginRight: 12,
   },
   orderTitle: {
     fontFamily: Fonts.semibold,
@@ -167,41 +135,6 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     color: Colors.darkText,
     marginBottom: 4,
-  },
-  orderDescr: {
-    fontFamily: Fonts.regular,
-    fontSize: 12,
-    lineHeight: 13,
-    color: Colors.lightText,
-    width: 125,
-  },
-  changeNumberButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginLeft: 'auto',
-    gap: 14,
-  },
-  numberButton: {
-    width: 35,
-    height: 35,
-    borderRadius: 20,
-    backgroundColor: Colors.white,
-    borderStyle: 'solid',
-    borderWidth: 1,
-    borderColor: Colors.borderColor,
-    justifyContent: 'center',
-  },
-  textNumberButton: {
-    color: Colors.darkText,
-    fontSize: 16,
-    textAlign: 'center',
-  },
-  coffeeCount: {
-    fontSize: 14,
-    fontWeight: '600',
-    fontStyle: 'normal',
-    lineHeight: 14,
-    color: Colors.darkText,
   },
   finalPriceWrapper: {
     gap: 16,

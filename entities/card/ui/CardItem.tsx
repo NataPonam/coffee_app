@@ -8,6 +8,11 @@ import { Card } from '../model/card.model';
 import { router } from 'expo-router';
 
 export default function CardItem({ name, subTitle, price, image, rating, id }: Card) {
+  const priceItem = new Intl.NumberFormat('ru-RU', {
+    style: 'currency',
+    currency: 'RUB',
+    maximumFractionDigits: 0,
+  }).format(price);
   return (
     <View style={styles.container}>
       <View>
@@ -24,7 +29,7 @@ export default function CardItem({ name, subTitle, price, image, rating, id }: C
         </View>
         <View style={styles.priceWrapper}>
           <View>
-            <Text style={styles.price}>{price} ₽</Text>
+            <Text style={styles.price}>{priceItem}</Text>
           </View>
           <Pressable style={styles.button} onPress={() => router.navigate(`/(app)/${id}`)}>
             <Text style={styles.textButton}>+</Text>

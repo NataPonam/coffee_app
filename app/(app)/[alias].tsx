@@ -4,28 +4,30 @@ import { initSize, SizeTabBar, UnionSizes } from '@/entities/card/ui/widgets/Siz
 import { ButtonComponent } from '@/shared/ButtonComponent/ButtonComponent';
 import axios, { AxiosError } from 'axios';
 import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import BigStarIcon from '@/assets/icons/BigStarIcon';
-import { atom, useAtom, useSetAtom } from 'jotai';
+import { atom, useAtom } from 'jotai';
 
-export const selectedCoffeAtom = atom<Card>();
+export const selectedCoffeAtom = atom<SelectedCard>();
 export const selectedCoffePriceAtom = atom<number>();
-
+export const selectedCoffeListAtom = atom<SelectedCard[]>([]);
+export interface SelectedCard {
+  item: Card;
+  quantity: number;
+  size: string;
+}
 export default function CoffeeItem() {
-  const [coffeeItem, setCoffeeItem] = useState<Card>();
-  // const [price, setPrice] = useState<number | undefined>(coffeeItem?.price);
   const [price, setPrice] = useAtom(selectedCoffePriceAtom);
-  // const setPriceAtom = useSetAtom(selectedCoffePriceAtom);
-  const setSelectedCoffee = useSetAtom(selectedCoffeAtom);
+  const [selectedCoffee, setSelectedCoffee] = useAtom(selectedCoffeAtom);
+  const [selectedCoffeeList, setSelectedCoffeeList] = useAtom(selectedCoffeListAtom);
   const [selectedSize] = useAtom<UnionSizes>(initSize);
   const { alias } = useLocalSearchParams();
 
   useEffect(() => {
     try {
       axios.get(`https://purpleschool.ru/coffee-api/id/${alias}`).then((res) => {
-        setCoffeeItem(res.data);
-        setSelectedCoffee(res.data);
+        setSelectedCoffee({ item: res.data, quantity: 1, size: 'M' });
       });
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -34,34 +36,62 @@ export default function CoffeeItem() {
     }
   }, []);
   useEffect(() => {
-    if (coffeeItem && selectedSize === 'S') {
-      setPrice(coffeeItem?.price - 30);
+    if (selectedCoffee && selectedSize === 'S') {
+      setPrice(selectedCoffee.item.price - 30);
     }
-    if (coffeeItem && selectedSize === 'L') {
-      setPrice(coffeeItem?.price + 30);
+    if (selectedCoffee && selectedSize === 'L') {
+      setPrice(selectedCoffee.item.price + 30);
     }
-    if (coffeeItem && selectedSize === 'M') {
-      setPrice(coffeeItem?.price);
+    if (selectedCoffee && selectedSize === 'M') {
+      setPrice(selectedCoffee.item.price);
     }
-  }, [coffeeItem, selectedSize]);
+  }, [selectedCoffee, selectedSize]);
+
+  useEffect(() => {
+    if (selectedCoffee) {
+      if (selectedCoffee.size !== selectedSize) {
+        setSelectedCoffee({ ...selectedCoffee, size: selectedSize });
+      }
+    }
+  }, [selectedCoffee, selectedSize]);
+
+  const addToCart = (item: SelectedCard | undefined) => {
+    if (item) {
+      if (!selectedCoffeeList.some((el) => el.item.id === item.item.id && el.size === item.size)) {
+        setSelectedCoffeeList([...selectedCoffeeList, item]);
+      } else {
+        const newArr = selectedCoffeeList.map((el) => {
+          if (el.item.id === item.item.id && el.size === item.size) {
+            return { ...el, quantity: el.quantity + 1 };
+          }
+          return el;
+        });
+        if (newArr) {
+          setSelectedCoffeeList(newArr);
+        }
+      }
+    }
+    router.dismiss();
+  };
+
   return (
     <>
       <View style={styles.container}>
-        <Image style={styles.image} source={{ uri: coffeeItem?.image }} />
+        <Image style={styles.image} source={{ uri: selectedCoffee?.item.image }} />
         <View style={styles.textWrapper}>
           <View style={styles.titleWrapper}>
-            <Text style={styles.title}>{coffeeItem?.name}</Text>
-            <Text style={styles.subTitle}>{coffeeItem?.subTitle}</Text>
+            <Text style={styles.title}>{selectedCoffee?.item.name}</Text>
+            <Text style={styles.subTitle}>{selectedCoffee?.item.subTitle}</Text>
           </View>
           <View style={styles.ratingContainer}>
             <BigStarIcon />
-            <Text style={styles.ratingText}>{coffeeItem?.rating}</Text>
+            <Text style={styles.ratingText}>{selectedCoffee?.item.rating}</Text>
           </View>
         </View>
         <View style={styles.line} />
         <View>
           <Text style={styles.descrTitle}>Описание</Text>
-          <Text style={styles.description}>{coffeeItem?.description}</Text>
+          <Text style={styles.description}>{selectedCoffee?.item.description}</Text>
         </View>
         <View>
           <Text style={styles.descrTitle}>Размер</Text>
@@ -73,7 +103,12 @@ export default function CoffeeItem() {
           <Text style={styles.priceTitle}>Цена</Text>
           <Text style={styles.priceText}>{price} ₽</Text>
         </View>
-        <ButtonComponent text="В корзину" onPress={() => router.back()} style={styles.button} />
+
+        <ButtonComponent
+          text="В корзину"
+          onPress={() => addToCart(selectedCoffee)}
+          style={styles.button}
+        />
       </View>
     </>
   );
