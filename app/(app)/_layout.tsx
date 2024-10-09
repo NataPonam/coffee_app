@@ -5,6 +5,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
+import { NotificationsComponent } from '@/shared/Notification/Notification';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -25,6 +26,7 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
+      <NotificationsComponent />
       <StatusBar style="light" backgroundColor="black" />
       <Stack
         screenOptions={{
@@ -65,6 +67,21 @@ export default function RootLayout() {
             statusBarStyle: 'dark',
             headerShown: true,
             title: 'Изменить адрес',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {
+              fontFamily: Fonts.semibold,
+              fontSize: 18,
+            },
+            headerShadowVisible: false,
+          }}
+        />
+        <Stack.Screen
+          name="test"
+          options={{
+            statusBarColor: Colors.white,
+            statusBarStyle: 'dark',
+            headerShown: true,
+            title: 'Доставка',
             headerTitleAlign: 'center',
             headerTitleStyle: {
               fontFamily: Fonts.semibold,

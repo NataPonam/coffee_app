@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useAtom } from 'jotai';
 import { router } from 'expo-router';
@@ -10,8 +10,10 @@ import OrderDeliveryAddress from '@/entities/order/OrderDeliveryAddress';
 import axios, { AxiosError } from 'axios';
 import { getAddress } from '@/entities/address/address.state';
 import OrderList from '@/entities/order/OrderList';
+import { currencyFormat } from '@/assets/utils/currencyFormat';
+import { ModalComponent } from '@/shared/Modal/ModalComponent';
 
-export interface OrderResponse {
+export interface OrderRequest {
   address: string;
   orderItems: [
     {
@@ -23,11 +25,12 @@ export interface OrderResponse {
 }
 
 export default function Cart() {
+  const [visibleModal, setVisibleModal] = useState<boolean>(false);
   const [addressLocation] = useAtom(getAddress);
   const [selectedSize] = useAtom<UnionSizes>(initSize);
   const [selectedCoffee] = useAtom(selectedCoffeAtom);
   const [selectedCoffeeList, setSelectedCoffeeList] = useAtom(selectedCoffeListAtom);
-
+  const delivetyPrice = 100;
   const commonPrice = selectedCoffeeList
     .map((el) => {
       const priceWithSize = el.size === 'S' ? -30 : el.size === 'L' ? 30 : 0;
@@ -37,42 +40,26 @@ export default function Cart() {
       return acc + current;
     }, 0);
 
-  const totalPrice = new Intl.NumberFormat('ru-RU', {
-    style: 'currency',
-    currency: 'RUB',
-    maximumFractionDigits: 0,
-  }).format(commonPrice);
-
-  const delivetyPrice = new Intl.NumberFormat('ru-RU', {
-    style: 'currency',
-    currency: 'RUB',
-    maximumFractionDigits: 0,
-  }).format(100);
-
-  const priceWithDelivery = new Intl.NumberFormat('ru-RU', {
-    style: 'currency',
-    currency: 'RUB',
-    maximumFractionDigits: 0,
-  }).format(commonPrice + 100);
-
-  const newOrder: OrderResponse = {
+  const newOrder: OrderRequest = {
     address: addressLocation,
     orderItems: [
       { id: selectedCoffee?.item.id, size: selectedSize, quantity: selectedCoffee?.quantity },
     ],
   };
   const makeOrder = async () => {
+    if (!addressLocation) {
+      return setVisibleModal(true);
+    }
     try {
       const response = await axios.post(`https://purpleschool.ru/coffee-api/order`, newOrder);
       if (response.data.success) {
-        router.push('/(app)/(tabs)/cart/success');
+        router.replace('/(app)/(tabs)/cart/success');
         setSelectedCoffeeList([]);
       }
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {
-        console.log(error.message);
-        router.navigate('/(app)/(tabs)/cart/error');
+        router.replace('/(app)/(tabs)/cart/error');
       }
     }
   };
@@ -80,6 +67,13 @@ export default function Cart() {
   return (
     <View style={styles.container}>
       <OrderDeliveryAddress />
+      <ModalComponent
+        visible={visibleModal}
+        setVisible={setVisibleModal}
+        text="Необходимо заполнить адрес доставки!"
+        buttonText="Хорошо"
+      />
+
       <View style={styles.orderList}>
         <View style={styles.line}></View>
         {selectedCoffeeList.length ? (
@@ -90,16 +84,16 @@ export default function Cart() {
               <Text style={styles.orderTitle}>Итог</Text>
               <View style={styles.priceWrapper}>
                 <Text style={styles.priceText}>Цена</Text>
-                <Text style={styles.priceNum}>{totalPrice}</Text>
+                <Text style={styles.priceNum}>{currencyFormat(commonPrice)}</Text>
               </View>
               <View style={styles.priceWrapper}>
                 <Text style={styles.priceText}>Доставка</Text>
-                <Text style={styles.priceNum}>{delivetyPrice}</Text>
+                <Text style={styles.priceNum}>{currencyFormat(delivetyPrice)}</Text>
               </View>
               <View style={styles.line}></View>
               <View style={styles.priceWrapper}>
                 <Text style={styles.priceText}>Итого к оплате</Text>
-                <Text style={styles.priceNum}>{priceWithDelivery}</Text>
+                <Text style={styles.priceNum}>{currencyFormat(commonPrice + delivetyPrice)}</Text>
               </View>
             </View>
             <ButtonComponent text="Заказать" onPress={makeOrder} />
@@ -117,7 +111,6 @@ export default function Cart() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // alignItems: 'flex-start',
     backgroundColor: Colors.white,
     paddingHorizontal: 30,
   },

@@ -16,6 +16,7 @@ export const Colors = {
   borderColor: '#F1F1F1',
   shadowColor: 'rgba(228, 228, 228, 0.25)',
   raitingBG: 'rgba(0, 0, 0, 0.16)',
+  red: '#FF4848',
 };
 export const Fonts = {
   regular: 'Sora-Regular',

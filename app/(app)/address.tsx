@@ -20,6 +20,7 @@ export default function Address() {
   const [latitude, setLatitude] = useState<number>(0);
   const [longitude, setLongitude] = useState<number>(0);
   const [errorPermission, setErrorPermission] = useState<string | null>(null);
+  const [errorDevice, setErrorDevice] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [currentAddress, setCurrentAddress] = useState<Location.LocationGeocodedAddress[][0]>();
 
@@ -46,13 +47,6 @@ export default function Address() {
       setErrorPermission('Недостаточно прав для доступа к геолокации');
       return;
     }
-
-    const { coords } = await Location.getCurrentPositionAsync({});
-    if (coords) {
-      const { latitude, longitude } = coords;
-      setLatitude(latitude);
-      setLongitude(longitude);
-    }
   };
   const getGeoLocation = async () => {
     if (errorPermission) {
@@ -61,8 +55,27 @@ export default function Address() {
         setErrorMessage(null);
       }, 3000);
     } else {
-      const addressReversed = await Location.reverseGeocodeAsync({ latitude, longitude });
-      setCurrentAddress(addressReversed[0]);
+      try {
+        const { coords } = await Location.getCurrentPositionAsync({});
+        if (coords) {
+          const { latitude, longitude } = coords;
+          setLatitude(latitude);
+          setLongitude(longitude);
+        }
+      } catch (error) {
+        if (error) {
+          setErrorDevice('Не можем Вас найти, пожалуйста введите адрес вручную');
+        }
+      }
+      if (errorDevice) {
+        setErrorMessage(errorDevice);
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 4000);
+      } else {
+        const addressReversed = await Location.reverseGeocodeAsync({ latitude, longitude });
+        setCurrentAddress(addressReversed[0]);
+      }
     }
   };
 

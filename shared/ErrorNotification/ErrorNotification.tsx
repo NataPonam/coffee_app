@@ -51,8 +51,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: Colors.accentBrown,
     position: 'absolute',
-    height: 40,
+    minHeight: 40,
     width: Dimensions.get('screen').width,
+    paddingVertical: 30,
   },
   errorText: {
     color: Colors.white,

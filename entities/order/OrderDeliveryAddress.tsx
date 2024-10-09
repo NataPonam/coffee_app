@@ -9,12 +9,13 @@ import EditIcon from '@/assets/icons/EditIcon';
 export default function OrderDeliveryAddress() {
   const [addressLocation] = useAtom(getAddress);
   const [addressInfo] = useAtom(getAddressInfo);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Адрес доставки</Text>
       <View>
-        <Text style={styles.address}>{addressLocation}</Text>
-        <Text style={styles.info}>{addressInfo}</Text>
+        {addressLocation && <Text style={styles.address}>{addressLocation}</Text>}
+        {addressInfo && <Text style={styles.info}>{addressInfo}</Text>}
       </View>
       <Pressable onPress={() => router.push('/(app)/address')} style={styles.button}>
         <EditIcon color={Colors.darkText} />

@@ -8,6 +8,7 @@ import React, { useEffect } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import BigStarIcon from '@/assets/icons/BigStarIcon';
 import { atom, useAtom } from 'jotai';
+import { currencyFormat } from '@/assets/utils/currencyFormat';
 
 export const selectedCoffeAtom = atom<SelectedCard>();
 export const selectedCoffePriceAtom = atom<number>();
@@ -101,7 +102,7 @@ export default function CoffeeItem() {
       <View style={styles.bottomContainer}>
         <View>
           <Text style={styles.priceTitle}>Цена</Text>
-          <Text style={styles.priceText}>{price} ₽</Text>
+          <Text style={styles.priceText}>{currencyFormat(price ? price : 0)}</Text>
         </View>
 
         <ButtonComponent

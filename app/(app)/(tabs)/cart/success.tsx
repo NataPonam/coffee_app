@@ -1,19 +1,28 @@
+import React from 'react';
 import { Colors, Fonts } from '@/constants/Colors';
 import { ButtonComponent } from '@/shared/ButtonComponent/ButtonComponent';
 import { router } from 'expo-router';
-import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
+import { atom, useSetAtom } from 'jotai';
+
+export const activeModalAtom = atom<boolean>(false);
 
 export default function Success() {
+  const setActiveModal = useSetAtom(activeModalAtom);
+
+  const navigateToCatalog = () => {
+    setTimeout(() => {
+      setActiveModal(true);
+    }, 2000);
+
+    router.navigate('/(app)/(tabs)/catalog');
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Заказ оформлен!</Text>
       <Image style={styles.image} source={require('./../../../../assets/images/coffee.png')} />
-      <ButtonComponent
-        text="На главную"
-        onPress={() => router.navigate('/(app)/(tabs)/catalog')}
-        style={styles.button}
-      />
+      <ButtonComponent text="На главную" onPress={navigateToCatalog} style={styles.button} />
     </View>
   );
 }
