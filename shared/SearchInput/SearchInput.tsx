@@ -29,17 +29,16 @@ export default function SearchInput({
 }
 const styles = StyleSheet.create({
   container: {
-    paddingLeft: 48,
-    height: 52,
+    paddingLeft: 40,
     borderRadius: 16,
     backgroundColor: Colors.input,
-    padding: 16,
     width: '100%',
     fontSize: 14,
     fontFamily: Fonts.regular,
-    color: Colors.white,
   },
   input: {
+    height: 52,
+    padding: 16,
     fontSize: 14,
     fontFamily: Fonts.regular,
     color: Colors.white,

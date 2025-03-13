@@ -50,9 +50,7 @@ export default function OrderList() {
             </Text>
           </View>
         </View>
-
         <Text style={styles.price}>{priceItem}</Text>
-
         <View style={styles.changeNumberButton}>
           <Pressable onPress={() => deleteQuantity(item)} style={styles.numberButton}>
             <Text style={styles.textNumberButton}>–</Text>

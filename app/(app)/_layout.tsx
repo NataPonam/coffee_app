@@ -36,21 +36,13 @@ export default function RootLayout() {
         <Stack.Screen
           name="index"
           options={{
-            statusBarColor: Colors.black,
             navigationBarColor: Colors.black,
           }}
         />
-        <Stack.Screen
-          name="(tabs)"
-          options={{
-            navigationBarColor: Colors.white,
-          }}
-        />
+        <Stack.Screen name="(tabs)" />
         <Stack.Screen
           name="[alias]"
           options={{
-            statusBarColor: Colors.white,
-            statusBarStyle: 'dark',
             headerShown: true,
             title: 'Описание',
             headerTitleAlign: 'center',
@@ -63,25 +55,8 @@ export default function RootLayout() {
         <Stack.Screen
           name="address"
           options={{
-            statusBarColor: Colors.white,
-            statusBarStyle: 'dark',
             headerShown: true,
             title: 'Изменить адрес',
-            headerTitleAlign: 'center',
-            headerTitleStyle: {
-              fontFamily: Fonts.semibold,
-              fontSize: 18,
-            },
-            headerShadowVisible: false,
-          }}
-        />
-        <Stack.Screen
-          name="test"
-          options={{
-            statusBarColor: Colors.white,
-            statusBarStyle: 'dark',
-            headerShown: true,
-            title: 'Доставка',
             headerTitleAlign: 'center',
             headerTitleStyle: {
               fontFamily: Fonts.semibold,
