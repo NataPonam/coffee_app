@@ -3,7 +3,7 @@ import BagTabIcon from '@/assets/icons/tabsIcon/BagTabIcon';
 import HomeTabIcon from '@/assets/icons/tabsIcon/HomeTabIcon';
 import Underline from '@/assets/icons/tabsIcon/Underline';
 import { Colors, Fonts } from '@/constants/Colors';
-import { BottomTabBarProps } from '@react-navigation/bottom-tabs/lib/typescript/src/types';
+import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { useAtomValue } from 'jotai';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 
@@ -18,7 +18,6 @@ export const CustomTabBar = ({ state, descriptors, navigation }: BottomTabBarPro
         const { options } = descriptors[route.key];
         const label = options.title;
         const isFocused = state.index === index;
-
         const onPress = () => {
           const event = navigation.emit({
             type: 'tabPress',
@@ -51,7 +50,7 @@ export const CustomTabBar = ({ state, descriptors, navigation }: BottomTabBarPro
             accessibilityRole="button"
             accessibilityState={isFocused ? { selected: true } : {}}
             accessibilityLabel={options.tabBarAccessibilityLabel}
-            testID={options.tabBarTestID}
+            testID={options.tabBarButtonTestID}
             onPress={onPress}
             onLongPress={onLongPress}
             style={{ ...styles.item, borderRightWidth: borderRightWidth }}

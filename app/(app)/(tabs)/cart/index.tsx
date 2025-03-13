@@ -52,14 +52,19 @@ export default function Cart() {
     }
     try {
       const response = await axios.post(`https://purpleschool.ru/coffee-api/order`, newOrder);
+
       if (response.data.success) {
-        router.replace('/(app)/(tabs)/cart/success');
-        setSelectedCoffeeList([]);
+        router.navigate('/(app)/(tabs)/cart/success');
+        //решение поставить таймер, чтобы экран не менялся  и не прыгал при переходе на success
+        const timerId = setTimeout(() => {
+          setSelectedCoffeeList([]);
+        }, 300);
+        return () => clearTimeout(timerId);
       }
       return response.data;
     } catch (error) {
       if (error instanceof AxiosError) {
-        router.replace('/(app)/(tabs)/cart/error');
+        router.navigate('/(app)/(tabs)/cart/error');
       }
     }
   };
@@ -112,7 +117,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.white,
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
   },
   line: {
     borderBottomWidth: 1,

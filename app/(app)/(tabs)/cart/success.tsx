@@ -13,8 +13,7 @@ export default function Success() {
   const navigateToCatalog = () => {
     setTimeout(() => {
       setActiveModal(true);
-    }, 2000);
-
+    }, 1000);
     router.navigate('/(app)/(tabs)/catalog');
   };
 

@@ -42,7 +42,7 @@ export default function HomeScreen() {
               opacity: animatedOpacity,
             }}
           >
-            Одно из самых вкусных кофе в городе!
+            Один из самых вкусных кофе в городе!
           </Animated.Text>
 
           <Text style={styles.subtitle}>Свежие зёрна, настоящая арабика и бережная обжарка</Text>

@@ -12,7 +12,7 @@ export type ModalType = {
 export function ModalComponent({ visible, setVisible, text, buttonText, descr }: ModalType) {
   return (
     <Modal animationType="fade" transparent={true} visible={visible}>
-      <View style={styles.centeredView}>
+      <Pressable style={styles.centeredView} onPress={() => setVisible(!visible)}>
         <View style={styles.modalView}>
           <Text style={styles.modalText}>{text}</Text>
           {descr && <Text style={styles.modalText}>{descr}</Text>}
@@ -23,7 +23,7 @@ export function ModalComponent({ visible, setVisible, text, buttonText, descr }:
             <Text style={styles.textStyle}>{buttonText}</Text>
           </Pressable>
         </View>
-      </View>
+      </Pressable>
     </Modal>
   );
 }
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   },
   button: {
     borderRadius: 10,
-    padding: 10,
+    padding: 15,
     elevation: 2,
   },
   buttonClose: {

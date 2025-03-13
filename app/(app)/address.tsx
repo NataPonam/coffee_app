@@ -92,16 +92,14 @@ export default function Address() {
   return (
     <View style={styles.container}>
       <View style={styles.inputWrapper}>
-        <View style={styles.inputSingleWrapper}>
-          <TextInput
-            style={styles.input}
-            placeholder="Введите адрес"
-            placeholderTextColor={Colors.placeholder}
-            onChangeText={setAddressInput}
-            value={addressInput}
-            multiline={true}
-          />
-        </View>
+        <TextInput
+          style={styles.input}
+          placeholder="Введите адрес"
+          placeholderTextColor={Colors.placeholder}
+          onChangeText={setAddressInput}
+          value={addressInput}
+          multiline={true}
+        />
         <View style={styles.icon}>
           <GeoTag />
         </View>
@@ -136,7 +134,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     gap: 16,
   },
-
   compassButton: {
     width: 34,
     height: 34,
@@ -148,7 +145,8 @@ const styles = StyleSheet.create({
     top: 11,
     right: 9,
   },
-  inputSingleWrapper: {
+  input: {
+    fontSize: 14,
     fontFamily: Fonts.regular,
     borderRadius: 14,
     backgroundColor: Colors.white,
@@ -159,16 +157,12 @@ const styles = StyleSheet.create({
     height: 56,
     padding: 16,
     paddingLeft: 40,
-  },
-  input: {
-    fontSize: 14,
-
     color: Colors.darkText,
   },
   inputMultyWrapper: {
     width: '100%',
     height: 56,
-    padding: 16,
+    padding: 12,
     paddingLeft: 40,
     fontSize: 14,
     fontFamily: Fonts.regular,
