@@ -2,8 +2,15 @@
 
 :star::star::star::star::star:Проект "CoffeeApp":star::star::star::star::star:\
 Приложение создано с :heart:, в рамках обучения на курсе "React Native и Expo Router" от PurpleSchool,\
-:point_right: Для просмотра необходмо пройти огонь и воду, продать душу дьяволу, ну или просто следовать инструкции ниже:smirk:
+:point_right: Для просмотра необходмо пройти огонь и воду, продать душу дьяволу...\
+ ну или просто следовать инструкции ниже:smirk:
 :sparkles:Приложение написано на [Expo](https://expo.dev) с помощью магии [`create-expo-app`](https://www.npmjs.com/package/create-expo-app):sparkles:
+
+## Стек:
+- React Native Expo,
+- TypeScript,
+- State manager Jotai,
+- REST API, Axios
 
 ## Установка:
 1. Склонируйте этот репозиторий: git clone https://github.com/NataPonam/coffee_app.git
@@ -11,7 +18,7 @@
 2. Установите зависимости
    ```bash
    npm install
-   ``
+   ```
 3. Запустите приложение:
    ```bash
     npx expo start
