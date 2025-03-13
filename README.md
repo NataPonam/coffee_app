@@ -3,8 +3,8 @@
 :star::star::star::star::star:Проект "CoffeeApp":star::star::star::star::star:\
 Приложение создано с :heart:, в рамках обучения на курсе "React Native и Expo Router" от PurpleSchool,\
 :point_right: Для просмотра необходмо пройти огонь и воду, продать душу дьяволу...\
- ну или просто следовать инструкции ниже:smirk:
-:sparkles:Приложение написано на [Expo](https://expo.dev) с помощью магии [`create-expo-app`](https://www.npmjs.com/package/create-expo-app):sparkles:
+ ну или просто следовать инструкции ниже :smirk:\
+:sparkles: Приложение написано на [Expo](https://expo.dev) с помощью магии [`create-expo-app`](https://www.npmjs.com/package/create-expo-app):sparkles:
 
 ## Стек:
 - React Native Expo,
