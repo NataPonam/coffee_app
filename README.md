@@ -1,50 +1,22 @@
-# Welcome to your Expo app 👋
+# Учебный проект CoffeeApp
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+:star::star::star::star::star:Проект "CoffeeApp":star::star::star::star::star:\
+Приложение создано с :heart:, в рамках обучения на курсе "React Native и Expo Router" от PurpleSchool,\
+:point_right: Для просмотра необходмо пройти огонь и воду, продать душу дьяволу, ну или просто следовать инструкции ниже:smirk:
+:sparkles:Приложение написано на [Expo](https://expo.dev) с помощью магии [`create-expo-app`](https://www.npmjs.com/package/create-expo-app):sparkles:
 
-## Get started
+## Установка:
+1. Склонируйте этот репозиторий: git clone https://github.com/NataPonam/coffee_app.git
 
-1. Install dependencies
-
+2. Установите зависимости
    ```bash
    npm install
-   ```
-
-2. Start the app
-
+   ``
+3. Запустите приложение:
    ```bash
     npx expo start
    ```
+4. Готово! Должно все работать :dancer:
 
-In the output, you'll find options to open the app in a
+Чтобы открыть приложение на своем телефоне можно скачать [Expo Go](https://expo.dev/go)
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
